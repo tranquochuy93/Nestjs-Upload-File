@@ -1,3 +1,88 @@
+### Module
+1. each file is treated as a separate module. Node.js wraps them in a function like this
+```ts
+function (exports, require, module, __filename, __dirname) {
+  // code of the module
+}
+```
+Node.js invokes the function that wraps our module a way, that the “this” keyword references to the module.exports
+```js
+console.log(this === module.exports); // true
+```
+utilities.js
+```ts
+function add (a, b) {
+  return a + b;
+}
+ 
+function subtract (a, b) {
+  return a - b;
+}
+ 
+module.exports = {
+  add,
+  subtract,
+};
+```
+main.js
+```ts
+const { add, subtract } = require('./utilities.js');
+ 
+console.log(add(1,2)); // 3
+console.log(subtract(2,1)); // 1
+```
+
+2.  in the terminal, you are in the global scope, the “this” keyword references to the global object
+```cmd
+this ==== global; //true
+var key = 'value';
+global.key // 'value'
+```
+
+### Process arguments
+1. The process object is a property of the global object
+2. process.argv property holds an array containing the command line arguments you pass when launching the Node.js process.
+main.ts
+```ts
+process.argv.forEach(argument => console.log(argument));
+```
+```cmd
+node ./main.js one two three
+```
+/usr/bin/node
+/home/marcin/Documents/node-playground/main.js
+one
+two
+three
+
+### EventEmitter
+```ts
+import * as EventEmitter from 'events';
+ 
+const eventEmitter = new EventEmitter();
+ 
+eventEmitter.on('event', function(data) { // listener
+  console.log(data); // { key: value }
+  console.log(this === eventEmitter); // true
+});
+ 
+eventEmitter.emit( // trigger event and send arguments
+  'event',
+  {
+    key: 'value'
+  }
+);
+
+eventEmitter.on('event1', () => {
+  console.log(this === eventEmitter); // false
+});
+
+eventEmitter.emit( // trigger event and send arguments
+  'event1'
+);
+
+eventEmitter.removeListener('event', listener);
+```
 
 ### The buffer is an array of numbers
 1. String Decoder: decoding Buffer objects into strings while preserving multi-byte characters.
