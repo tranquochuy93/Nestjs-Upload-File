@@ -1,3 +1,12 @@
+### exceljs
+1. read date cell
+```
+var utc_value = Math.floor(your_number- 25569) * 86400;
+var date_info = new Date(utc_value * 1000);
+var month = parseInt(date_info.getMonth()) + 1;
+newDate = date_info.getFullYear() + "/" + month + "/" + date_info.getDate();
+````
+
 ### Module
 1. each file is treated as a separate module. Node.js wraps them in a function like this
 ```ts
